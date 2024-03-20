@@ -2,6 +2,18 @@ package com.javaex;
 
 public class HelloWorld {
 
+	public enum DayOfWeek {
+		SUNDAY,
+		MONDAY,
+		TUESDAY,
+		WEDNESDAY,
+		THURSDAY,
+		FRIDAY,
+		SATURDAY;
+	}
+	
+	
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println("Hello World!");
@@ -16,6 +28,9 @@ public class HelloWorld {
 		System.out.println(var2 == var3); // ???
 		System.out.println(var1 == var3); // ???
 
+		
+		System.out.println(DayOfWeek.values());
+		
 	}
 
 }
