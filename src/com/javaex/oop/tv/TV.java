@@ -4,6 +4,11 @@ public class TV {
 	private int channel;
 	private int volume;
 	private boolean power;
+	private static final int MAX_CHANNEL = 255;
+	private static final int MIN_CHANNEL = 1;
+	private static final int MAX_VOLUME = 100;
+	private static final int MIN_VOLUME = 0;
+	
 	
 	public TV() {
 		channel = 7;
@@ -38,9 +43,8 @@ public class TV {
 	}
 	
 	public void channel(int channel) {
-		if (!power)
-			return;
-		if (channel < 1 || channel > 255)
+		if (!power || channel < MAX_CHANNEL ||
+		 channel > MAX_CHANNEL)
 			return ;
 		this.channel = channel;
 	}
@@ -50,22 +54,22 @@ public class TV {
 			return;
 		if (up) {
 			++channel;
-			if (channel > 255)
-				channel = 1;
+			if (channel > MAX_CHANNEL)
+				channel = MIN_CHANNEL;
 		} else {
 			--channel;
-			if (channel < 1)
-				channel = 255;
+			if (channel < MIN_CHANNEL)
+				channel = MAX_CHANNEL;
 		}
 	}
 	
 	public void volume(int volume) {
 		if (!power)
 			return;
-		if (volume > 100)
-			this.volume = 100;
-		else if (volume < 0)
-			this.volume = 0;
+		if (volume > MAX_VOLUME)
+			this.volume = MAX_VOLUME;
+		else if (volume < MIN_VOLUME)
+			this.volume = MIN_VOLUME;
 		else
 			this.volume = volume;
 	}
@@ -75,12 +79,12 @@ public class TV {
 			return;
 		if (up) {
 			++volume;
-			if (volume > 100)
-				volume = 100;
+			if (volume > MAX_VOLUME)
+				volume = MAX_VOLUME;
 		} else {
 			--volume;
-			if (volume < 0)
-				volume = 0;
+			if (volume < MIN_VOLUME)
+				volume = MIN_VOLUME;
 		}
 	}
 	
