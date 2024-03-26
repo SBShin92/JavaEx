@@ -24,5 +24,6 @@ public class StaticEx {
 		
 		super.finalize();
 		System.out.println("소멸자 호출");
+
 	}
 }

@@ -15,6 +15,15 @@ public class StaticExApp {
 		s3 = null;
 		System.out.println("s3 해제");
 		System.out.println("refcount: " + StaticEx.refCount);
+		
+		
+		System.gc();
+		try {
+			Thread.sleep(1000);
+			System.out.println("refcount: " + StaticEx.refCount);
+		} catch (Exception e) {
+			
+		}
 	}
 	
 }
