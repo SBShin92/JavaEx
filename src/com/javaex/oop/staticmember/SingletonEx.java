@@ -7,5 +7,6 @@ public class SingletonEx {
 
         System.out.println("s1 = " + s1);
         System.out.println("s2 = " + s2);
+
     }
 }
