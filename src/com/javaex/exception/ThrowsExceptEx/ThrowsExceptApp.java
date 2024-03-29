@@ -1,4 +1,4 @@
-package com.javaex.exception.ThrowsExcept;
+package com.javaex.exception.ThrowsExceptEx;
 
 import java.io.IOException;
 
@@ -11,10 +11,18 @@ public class ThrowsExceptApp {
     public static void main(String[] args) {
         ThrowsExcept except = new ThrowsExcept();
         try {
+            except.divide(50, 0);
+            except.executeRuntimeException();
             except.executeExcept();
+        } catch (CustomArithmeticException e) {
+            System.err.println(e.getMessage());
+            System.err.println("나누어지는 수: " + e.getNum1());
+            System.err.println("나누는 수: " + e.getNum2());
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("------------");
+            System.err.println(e.getMessage());
+        } catch (RuntimeException e) {
             System.err.println(e.getMessage());
         }
     }
