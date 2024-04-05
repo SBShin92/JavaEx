@@ -1,5 +1,6 @@
 package com.javaex.collection.list;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,11 +25,19 @@ public class ListEx {
         lst.remove(2);
         lst.remove("Python");
         System.out.println(lst);
-        lst.remove("Java");
-        System.out.println(lst);
-        lst.remove("Java");
-        System.out.println(lst);
+        System.out.println("======== iterator ========");
+        Iterator<String> iter = lst.iterator();
+        while (iter.hasNext()) {
+            String item = iter.next();
+            System.out.print(item + " ");
+        }
+        System.out.println();
 
+        System.out.println("======== remove, clear ========");
+        lst.remove("Java");
+        System.out.println(lst);
+        lst.remove("Java");
+        System.out.println(lst);
         lst.clear();
         System.out.println(lst);
     }
