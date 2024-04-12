@@ -2,6 +2,7 @@ package com.javaex.io.bytestream;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,5 +36,10 @@ public class BufferedStreamEx {
 		} catch (Exception e) {
 			System.err.println(e.getStackTrace());
 		}
+		
+//		File f = new File(target); // 생성된 파일 지우려면 주석 해제 후 실행
+//		if (f.exists())
+//			f.delete();
+		
 	}
 }

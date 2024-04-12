@@ -1,5 +1,6 @@
 package com.javaex.io.charstream;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -16,6 +17,10 @@ public class CharStreamEx {
 
 		System.out.println("==========================");
 		readfile();
+		
+//		File f = new File(filename); // 생성된 파일 지우려면 주석 해제 후 실행
+//		if (f.exists())
+//			f.delete();
 	}
 
 	private static void readfile() {
