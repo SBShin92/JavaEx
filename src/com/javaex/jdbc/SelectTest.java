@@ -34,7 +34,8 @@ public class SelectTest {
 			e.printStackTrace();
 		} finally {
 			try {
-				rs.close();
+				if (rs != null)
+					rs.close();
 				System.out.println("연결 종료");
 			} catch (SQLException e) {
 				System.err.println("ResultSet을 닫는 데 실패했습니다.");
