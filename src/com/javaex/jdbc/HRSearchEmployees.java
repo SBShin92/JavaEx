@@ -36,10 +36,9 @@ public class HRSearchEmployees {
             stmt = con.createStatement();
             System.out.print("사원 이름을 입력하세요.\n> ");
             String str = sc.nextLine().trim();
-            String newSql = sql.replace("%%", "%" + str + "%");
-            newSql = sql.replace("%%", "%" + str + "%");
+            sql = sql.replaceAll("%%", "%" + str + "%");
             try {
-                rs = stmt.executeQuery(newSql);
+                rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     System.out.printf("%-20s %-20s %-20s %-20s %-20s%n",
                             "이름", "성", "이메일", "전화번호", "입사일");
