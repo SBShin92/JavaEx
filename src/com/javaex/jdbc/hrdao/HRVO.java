@@ -8,15 +8,17 @@ public class HRVO {
     private String email;
     private String phone_number;
     private Date hire_date;
+    private Long salary;
     public HRVO() {
     }
     public HRVO(String first_name, String last_name, String email, String phone_number,
-            Date hire_date) {
+            Date hire_date, Long salary) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email = email;
         this.phone_number = phone_number;
         this.hire_date = hire_date;
+        this.salary = salary;
     }
     public String getFirst_name() {
         return first_name;
@@ -33,11 +35,13 @@ public class HRVO {
     public Date getHire_date() {
         return hire_date;
     }
+    public Long getSalary() {
+        return salary;
+    }
     @Override
     public String toString() {
-        return "HRVO [first_name=" + first_name + ", last_name=" + last_name
-                + ", email=" + email + ", phone_number=" + phone_number + ", hire_date=" + hire_date + "]";
+        return "HRVO [first_name=" + first_name + ", last_name=" + last_name + ", email=" + email + ", phone_number="
+                + phone_number + ", hire_date=" + hire_date + ", salary=" + salary + "]";
     }
-
     
 }

@@ -27,7 +27,7 @@ public class HRDAOImplement implements HRDAO {
     }
 
     @Override
-    public List<HRVO> getListFromSearch(String inputLine) {
+    public List<HRVO> getListFromSearchName(String inputLine) {
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -39,7 +39,8 @@ public class HRDAOImplement implements HRDAO {
                 last_name,
                 email,
                 '+' || replace(phone_number, '.', '-') "phoneNumber",
-                hire_date
+                hire_date,
+                salary
                 FROM employees
                 WHERE LOWER(first_name) LIKE LOWER(?)
                     OR LOWER(last_name) LIKE LOWER(?)
@@ -55,7 +56,69 @@ public class HRDAOImplement implements HRDAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getString(4),
-                        rs.getDate(5));
+                        rs.getDate(5),
+                        rs.getLong(6));
+                hrvoLst.add(hrvo);
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL 에러");
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    System.err.println("close failed: Connection Object");
+                }
+            }
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    System.err.println("close failed: PreparedStatement Object");
+                }
+            }
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    System.err.println("close failed: ResultSet Object");
+                }
+            }
+        }
+        return hrvoLst;
+    }
+
+    @Override
+    public List<HRVO> getListFromMinMaxSalary(Long minSalary, Long maxSalary) {
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<HRVO> hrvoLst = new ArrayList<>();
+        HRVO hrvo = null;
+
+        String sql = """
+                SELECT first_name,
+                last_name,
+                email,
+                '+' || replace(phone_number, '.', '-') "phoneNumber",
+                hire_date,
+                salary
+                FROM employees
+                WHERE salary >= ? AND salary <= ?
+                    """;
+        try {
+            con = getConnection();
+            pstmt = con.prepareStatement(sql);
+            pstmt.setLong(1, minSalary);
+            pstmt.setLong(2, maxSalary);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                hrvo = new HRVO(rs.getString(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getDate(5),
+                        rs.getLong(6));
                 hrvoLst.add(hrvo);
             }
         } catch (SQLException e) {
