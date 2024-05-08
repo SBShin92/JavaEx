@@ -27,18 +27,25 @@ public class HRApp {
     }
 
     private static void searchSalary(Scanner sc) {
+        Long minSalary = null;
+        Long maxSalary = null;
         System.out.println("입력한 금액 범위의 사원들을 출력합니다.");
-        System.out.print("최소급여를 입력하세요.\n > ");
-        Long minSalary = Long.parseLong(sc.nextLine().trim());
-        System.out.print("최대급여를 입력하세요.\n > ");
-        Long maxSalary = Long.parseLong(sc.nextLine().trim());
-
-        HRDAO dao = new HRDAOImplement();
-        List<HRVO> lst = dao.getListFromMinMaxSalary(minSalary, maxSalary);
-        for (HRVO node : lst) {
-            System.out.printf("%-20s %-20s%n",
-                    (node.getFirst_name() + " " + node.getLast_name()),
-                    node.getSalary());
+        try {
+            System.out.print("최소급여를 입력하세요.\n > ");
+            minSalary = Long.parseLong(sc.nextLine().trim());
+            System.out.print("최대급여를 입력하세요.\n > ");
+            maxSalary = Long.parseLong(sc.nextLine().trim());
+            HRDAO dao = new HRDAOImplement();
+            List<HRVO> lst = dao.getListFromMinMaxSalary(minSalary, maxSalary);
+            for (HRVO node : lst) {
+                System.out.printf("%-20s %-20s%n",
+                        (node.getFirst_name() + " " + node.getLast_name()),
+                        node.getSalary());
+            }
+            if (lst.size() == 0)
+                System.out.println("일치하는 사원이 없습니다.");
+        } catch (NumberFormatException e) {
+            System.err.println("숫자를 입력하세요");
         }
     }
 
@@ -56,5 +63,7 @@ public class HRApp {
                     node.getPhone_number(),
                     node.getHire_date());
         }
+        if (lst.size() == 0)
+            System.out.println("일치하는 사원이 없습니다.");
     }
 }
