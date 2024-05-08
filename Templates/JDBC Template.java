@@ -2,10 +2,10 @@ package com.javaex.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
-import java.sql.Statement;
 
 public class JDBCTemplate {
     public static void main(String[] args) {
@@ -14,7 +14,7 @@ public class JDBCTemplate {
         String dbpass = "hr"; // password
 
         Connection con = null;
-        Statement stmt = null;
+        PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         String sql = """
@@ -26,9 +26,12 @@ public class JDBCTemplate {
             // Class.forName("oracle.jdbc.driver.OracleDriver"); // JDBC 4.0(JDK 6) 아래 버전은
             // 필요
             con = DriverManager.getConnection(dburl, dbid, dbpass);
-            stmt = con.createStatement();
+            pstmt = con.createStatement(sql);
+            /*
+             * pstmmt.set 변수 지정
+             */
             try {
-                rs = stmt.executeQuery(sql);
+                rs = pstmt.executeQuery();
                 while (rs.next()) {
                     // Do
                 }
@@ -55,9 +58,9 @@ public class JDBCTemplate {
                     System.err.println("Connection 객체를 닫는 데 실패했습니다.");
                 }
             }
-            if (stmt != null) {
+            if (pstmt != null) {
                 try {
-                    stmt.close();
+                    pstmt.close();
                 } catch (SQLException e) {
                     System.err.println("Statement 객체를 닫는 데 실패했습니다.");
                 }
