@@ -19,21 +19,100 @@ public class PhoneBookDAOImplement implements PhoneBookDAO {
     }
 
     @Override
-    public boolean checkIsPhoneBookTable() {
-        // TODO Auto-generated method stub
+    public boolean checkPhoneBookTable() {
+        String sql = """
+                    SELECT *
+                    FROM user_tables
+                    WHERE table_name = 'PHONE_BOOK'
+                """;
+        try (
+                Connection con = getConnection();
+                PreparedStatement pstmt = con.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery();) {
+            if (!rs.next() && createPhoneBookTable())
+                return true;
+        } catch (ClassNotFoundException e) {
+            System.err.println("드라이버를 찾을 수 없습니다.");
+        } catch (SQLException e) {
+            System.err.println("SQL 에러");
+        }
         return false;
     }
 
-    @Override
-    public boolean createPhoneBookTable() {
-        // TODO Auto-generated method stub
+    private boolean createPhoneBookTable() {
+        String sql = """
+                CREATE TABLE PHONE_BOOK (
+                    id NUMBER(10) PRIMARY KEY,
+                    name VARCHAR2(10),
+                    hp VARCHAR2(20),
+                        tel VARCHAR2(20)
+                )
+                    """;
+        try (
+                Connection con = getConnection();
+                PreparedStatement pstmt = con.prepareStatement(sql);) {
+            pstmt.executeUpdate();
+            checkSequence();
+        } catch (ClassNotFoundException e) {
+            System.err.println("드라이버를 찾을 수 없습니다.");
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkSequence() {
+        String sql = """
+                    SELECT last_number
+                    FROM user_sequences
+                    WHERE sequence_name = 'SEQ_PHONE_BOOK'
+                """;
+        try (
+                Connection con = getConnection();
+                PreparedStatement pstmt = con.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery();) {
+            if (rs.next())
+                dropSequence();
+            if (createSequence())
+                return true;
+        } catch (ClassNotFoundException e) {
+            System.err.println("드라이버를 찾을 수 없습니다.");
+        } catch (SQLException e) {
+            System.err.println("SQL 에러");
+        }
         return false;
     }
 
-    @Override
-    public boolean dropPhoneBookTable() {
-        // TODO Auto-generated method stub
-        return false;
+    private boolean dropSequence() {
+        String sql = """
+                DROP SEQUENCE seq_phone_book
+                    """;
+        try (
+                Connection con = getConnection();
+                PreparedStatement pstmt = con.prepareStatement(sql);) {
+            pstmt.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            System.err.println("드라이버를 찾을 수 없습니다.");
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean createSequence() {
+        String sql = """
+                CREATE SEQUENCE seq_phone_book
+                    """;
+        try (
+                Connection con = getConnection();
+                PreparedStatement pstmt = con.prepareStatement(sql);) {
+            pstmt.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            System.err.println("드라이버를 찾을 수 없습니다.");
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -44,10 +123,9 @@ public class PhoneBookDAOImplement implements PhoneBookDAO {
                     FROM phone_book
                 """;
         try (
-            Connection con = getConnection();
-            PreparedStatement pstmt = con.prepareStatement(sql);
-            ResultSet rs = pstmt.executeQuery();
-        ) {
+                Connection con = getConnection();
+                PreparedStatement pstmt = con.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery();) {
             while (rs.next()) {
                 PhoneBookVO tmp = new PhoneBookVO(rs.getLong("id"),
                         rs.getString("name"),
@@ -71,9 +149,8 @@ public class PhoneBookDAOImplement implements PhoneBookDAO {
                     VALUES (seq_phone_book.NEXTVAL, ?, ?, ?)
                 """;
         try (
-            Connection con = getConnection();
-            PreparedStatement pstmt = con.prepareStatement(sql);
-        ) {
+                Connection con = getConnection();
+                PreparedStatement pstmt = con.prepareStatement(sql);) {
             pstmt.setString(1, name);
             pstmt.setString(2, hp);
             pstmt.setString(3, tel);
@@ -94,9 +171,8 @@ public class PhoneBookDAOImplement implements PhoneBookDAO {
                     WHERE id = ?
                 """;
         try (
-            Connection con = getConnection();
-            PreparedStatement pstmt = con.prepareStatement(sql);
-        ) {
+                Connection con = getConnection();
+                PreparedStatement pstmt = con.prepareStatement(sql);) {
             pstmt.setLong(1, id);
             result = pstmt.executeUpdate();
         } catch (ClassNotFoundException e) {
@@ -118,9 +194,8 @@ public class PhoneBookDAOImplement implements PhoneBookDAO {
                 """;
 
         try (
-            Connection con = getConnection();
-            PreparedStatement pstmt = con.prepareStatement(sql);
-        ) {
+                Connection con = getConnection();
+                PreparedStatement pstmt = con.prepareStatement(sql);) {
             pstmt.setString(1, "%" + searchInputString + "%");
             rs = pstmt.executeQuery();
             while (rs.next()) {

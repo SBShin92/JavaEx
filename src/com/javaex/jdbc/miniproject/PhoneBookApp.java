@@ -13,6 +13,7 @@ public class PhoneBookApp {
         boolean flag = true;
 
         displayTitle("전화번호 관리 프로그램");
+        checkDatabase();
         while (flag) {
             displayMenu();
             flag = run(sc);
@@ -20,6 +21,15 @@ public class PhoneBookApp {
         }
         sc.close();
         displayTitle("감사합니다");
+    }
+
+    private static void checkDatabase() {
+        PhoneBookDAO dao = new PhoneBookDAOImplement();
+        if (dao.checkPhoneBookTable()) {
+            System.out.println();
+            System.out.println("** 새로운 테이블을 생성합니다. **");
+            System.out.println();
+        }
     }
 
     private static boolean run(Scanner sc) {
