@@ -1,4 +1,4 @@
-package com.javaex.jdbc;
+package com.javaex.jdbc.basic;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.util.Scanner;
 
-public class HRSearchEmployeesPstmt {
+public class HRSalaryPstmt {
     public static void main(String[] args) {
         String dburl = "jdbc:oracle:thin:@localhost:1521:xe"; // jdbc:dbms이름:드라이버종류:ip:port:db이름
         String dbid = "hr"; // id
@@ -19,13 +19,10 @@ public class HRSearchEmployeesPstmt {
         ResultSet rs = null;
 
         String sql = """
-                SELECT first_name, 
-                    last_name, 
-                    email, '+' || replace(phone_number, '.', '-'), 
-                    TO_CHAR(hire_date, 'yyyy-mm-dd')
-                FROM employees
-                WHERE LOWER(first_name) LIKE LOWER(?) 
-                    OR LOWER(last_name) LIKE LOWER(?)
+                    SELECT first_name || ' ' || last_name,
+                        salary
+                    FROM employees
+                    WHERE salary >= ? AND salary <= ?
                 """;
         ; // SQL 입력
 
@@ -34,19 +31,28 @@ public class HRSearchEmployeesPstmt {
             // 필요
             con = DriverManager.getConnection(dburl, dbid, dbpass);
             pstmt = con.prepareStatement(sql);
-            System.out.print("사원 이름을 입력하세요.\n> ");
-            String str = "%" + sc.nextLine().trim() + "%";
+            System.out.println("최소급여와 최대급여를 입력하세요.");
+            System.out.print("최소급여: ");
+            String inputLine = sc.nextLine().trim();
+            String minSalary = "0";
+            if (inputLine != "")
+                minSalary = inputLine;
+            System.out.print("최대급여: ");
+            inputLine = sc.nextLine().trim();
+            String maxSalary = "999999999";
+            if (inputLine != "")
+                maxSalary = inputLine;
             try {
-                pstmt.setString(1, str);
-                pstmt.setString(2, str);
+                pstmt.setInt(1, Integer.parseInt(minSalary));
+                pstmt.setInt(2, Integer.parseInt(maxSalary));
                 rs = pstmt.executeQuery();
+                System.out.println("===================================");
                 while (rs.next()) {
-                    System.out.printf("%-20s %-20s %-20s %-20s %-20s%n",
-                            "이름", "성", "이메일", "전화번호", "입사일");
-                    while (rs.next())
-                        System.out.printf("%-20s %-20s %-20s %-20s %-20s%n",
-                                rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+                    System.out.printf("%-30s %-10s%n",
+                            rs.getString(1), rs.getString(2));
                 }
+            } catch (NumberFormatException e) {
+                System.err.println("숫자만 입력해주세요.");
             } catch (SQLTimeoutException e) {
                 System.err.println("타임아웃. SQL 에러");
             } catch (SQLException e) {

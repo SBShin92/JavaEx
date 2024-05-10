@@ -1,4 +1,4 @@
-package com.javaex.jdbc;
+package com.javaex.jdbc.basic;
 
 import java.sql.*;
 

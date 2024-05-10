@@ -1,21 +1,21 @@
-package com.javaex.jdbc;
+package com.javaex.jdbc.basic;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
-import java.sql.Statement;
 import java.util.Scanner;
 
-public class HRSearchEmployees {
+public class HRSearchEmployeesPstmt {
     public static void main(String[] args) {
         String dburl = "jdbc:oracle:thin:@localhost:1521:xe"; // jdbc:dbms이름:드라이버종류:ip:port:db이름
         String dbid = "hr"; // id
         String dbpass = "hr"; // password
 
         Connection con = null;
-        Statement stmt = null;
+        PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         String sql = """
@@ -24,8 +24,8 @@ public class HRSearchEmployees {
                     email, '+' || replace(phone_number, '.', '-'), 
                     TO_CHAR(hire_date, 'yyyy-mm-dd')
                 FROM employees
-                WHERE LOWER(first_name) LIKE LOWER('%%') 
-                    OR LOWER(last_name) LIKE LOWER('%%')
+                WHERE LOWER(first_name) LIKE LOWER(?) 
+                    OR LOWER(last_name) LIKE LOWER(?)
                 """;
         ; // SQL 입력
 
@@ -33,12 +33,13 @@ public class HRSearchEmployees {
             // Class.forName("oracle.jdbc.driver.OracleDriver"); // JDBC 4.0(JDK 6) 아래 버전은
             // 필요
             con = DriverManager.getConnection(dburl, dbid, dbpass);
-            stmt = con.createStatement();
+            pstmt = con.prepareStatement(sql);
             System.out.print("사원 이름을 입력하세요.\n> ");
-            String str = sc.nextLine().trim();
-            sql = sql.replaceAll("%%", "%" + str + "%");
+            String str = "%" + sc.nextLine().trim() + "%";
             try {
-                rs = stmt.executeQuery(sql);
+                pstmt.setString(1, str);
+                pstmt.setString(2, str);
+                rs = pstmt.executeQuery();
                 while (rs.next()) {
                     System.out.printf("%-20s %-20s %-20s %-20s %-20s%n",
                             "이름", "성", "이메일", "전화번호", "입사일");
@@ -63,9 +64,9 @@ public class HRSearchEmployees {
                     System.err.println("Connection 객체를 닫는 데 실패했습니다.");
                 }
             }
-            if (stmt != null) {
+            if (pstmt != null) {
                 try {
-                    stmt.close();
+                    pstmt.close();
                 } catch (SQLException e) {
                     System.err.println("Statement 객체를 닫는 데 실패했습니다.");
                 }
