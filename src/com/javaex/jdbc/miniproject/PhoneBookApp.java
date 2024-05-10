@@ -2,6 +2,8 @@ package com.javaex.jdbc.miniproject;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PhoneBookApp {
     private static final String UTF_CHARSET = "UTF-8";
@@ -117,10 +119,22 @@ public class PhoneBookApp {
         System.out.println("<2.등록>");
         System.out.print(">이름: ");
         String name = sc.nextLine().trim();
+        if (!nameRegex(name)) {
+            System.out.println("잘못된 입력입니다.");
+            return;
+        }
         System.out.print(">휴대전화: ");
         String hp = sc.nextLine().trim();
+        if (!phoneRegex(hp)) {
+            System.out.println("잘못된 입력입니다.");
+            return;
+        }
         System.out.print(">집전화: ");
         String tel = sc.nextLine().trim();
+        if (!phoneRegex(tel)) {
+            System.out.println("잘못된 입력입니다.");
+            return;
+        }
         boolean result = dao.insert(name, hp, tel);
         System.out.println();
         if (result)
@@ -152,4 +166,19 @@ public class PhoneBookApp {
         System.out.println("******************************************");
     }
 
+    private static boolean nameRegex(String str) {
+        Pattern pattern = Pattern.compile("[가-힣a-zA-Z]+");
+        Matcher matcher = pattern.matcher(str);
+        if (matcher.matches())
+            return true;
+        return false;
+    }
+
+    private static boolean phoneRegex(String str) {
+        Pattern pattern = Pattern.compile("[0-9]+-[0-9]+-[0-9]+");
+        Matcher matcher = pattern.matcher(str);
+        if (matcher.matches())
+            return true;
+        return false;
+    }
 }
