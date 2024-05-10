@@ -38,8 +38,9 @@ public class PhoneBookApp {
         if (dao.dropPhoneBookTable()) {
             System.out.println();
             System.out.println("** 데이터베이스를 삭제했습니다. **");
-            System.out.println();            
-        };
+            System.out.println();
+        }
+        ;
     }
 
     private static void checkDatabase() {
@@ -62,16 +63,16 @@ public class PhoneBookApp {
             case "1":
                 displayList(dao);
                 break;
-                case "2":
+            case "2":
                 addTupleToTable(dao, sc);
                 break;
-                case "3":
+            case "3":
                 deleteTupleToTable(dao, sc);
                 break;
-                case "4":
+            case "4":
                 searchNameToTable(dao, sc);
                 break;
-                case "5":
+            case "5":
                 return false;
             default:
                 System.out.println("잘못된 입력입니다.");
@@ -80,8 +81,6 @@ public class PhoneBookApp {
         return true;
     }
 
-
-
     private static void searchNameToTable(PhoneBookDAO dao, Scanner sc) {
         List<PhoneBookVO> lst = dao.getList();
 
@@ -89,12 +88,12 @@ public class PhoneBookApp {
         System.out.print(">이름: ");
         String name = sc.nextLine().trim();
         lst = dao.search(name);
-            for (PhoneBookVO node: lst) {
-                System.out.printf("%2d. %-3s %-15s %-15s%n",
+        for (PhoneBookVO node : lst) {
+            System.out.printf("%2d. %-3s %-15s %-15s%n",
                     node.getId(), node.getName(), node.getHp(), node.getTel());
-            }
-            if (lst.size() == 0)
-                System.out.println("[정보가 없습니다.]");
+        }
+        if (lst.size() == 0)
+            System.out.println("[정보가 없습니다.]");
     }
 
     private static void deleteTupleToTable(PhoneBookDAO dao, Scanner sc) {
@@ -103,6 +102,7 @@ public class PhoneBookApp {
             System.out.print(">번호: ");
             Long id = Long.parseLong(sc.nextLine().trim());
             boolean result = dao.delete(id);
+            System.out.println();
             if (result)
                 System.out.println("[삭제되었습니다.]");
             else
@@ -122,6 +122,7 @@ public class PhoneBookApp {
         System.out.print(">집전화: ");
         String tel = sc.nextLine().trim();
         boolean result = dao.insert(name, hp, tel);
+        System.out.println();
         if (result)
             System.out.println("[등록되었습니다.]");
         else
@@ -132,14 +133,13 @@ public class PhoneBookApp {
         List<PhoneBookVO> lst = dao.getList();
 
         System.out.println("<1.리스트>");
-            for (PhoneBookVO node: lst) {
-                System.out.printf("%2d. %-3s %-15s %-15s%n",
+        for (PhoneBookVO node : lst) {
+            System.out.printf("%2d. %-3s %-15s %-15s%n",
                     node.getId(), node.getName(), node.getHp(), node.getTel());
-            }
-            if (lst.size() == 0)
-                System.out.println("[정보가 없습니다.]");
+        }
+        if (lst.size() == 0)
+            System.out.println("[정보가 없습니다.]");
     }
-
 
     private static void displayMenu() {
         System.out.println("1.리스트 2.등록 3.삭제 4.검색 5.종료");
@@ -151,7 +151,5 @@ public class PhoneBookApp {
         System.out.printf("*         %-21s*%n", str);
         System.out.println("******************************************");
     }
-
-    
 
 }
