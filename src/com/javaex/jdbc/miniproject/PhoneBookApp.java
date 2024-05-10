@@ -19,15 +19,34 @@ public class PhoneBookApp {
             flag = run(sc);
             System.out.println();
         }
+        System.out.println("Database를 삭제하시겠습니까? [Y/n]");
+        String inputString = sc.nextLine().trim();
+        switch (inputString) {
+            case "y":
+            case "Y":
+                dropDatabase();
+                break;
+            default:
+                break;
+        }
         sc.close();
         displayTitle("감사합니다");
+    }
+
+    private static void dropDatabase() {
+        PhoneBookDAO dao = new PhoneBookDAOImplement();
+        if (dao.dropPhoneBookTable()) {
+            System.out.println();
+            System.out.println("** 데이터베이스를 삭제했습니다. **");
+            System.out.println();            
+        };
     }
 
     private static void checkDatabase() {
         PhoneBookDAO dao = new PhoneBookDAOImplement();
         if (dao.checkPhoneBookTable()) {
             System.out.println();
-            System.out.println("** 새로운 테이블을 생성합니다. **");
+            System.out.println("** 새로운 데이터베이스를 생성합니다. **");
             System.out.println();
         }
     }
@@ -71,7 +90,7 @@ public class PhoneBookApp {
         String name = sc.nextLine().trim();
         lst = dao.search(name);
             for (PhoneBookVO node: lst) {
-                System.out.printf("%-4d %-6s %-15s %-15s%n",
+                System.out.printf("%2d. %-3s %-15s %-15s%n",
                     node.getId(), node.getName(), node.getHp(), node.getTel());
             }
             if (lst.size() == 0)
@@ -114,7 +133,7 @@ public class PhoneBookApp {
 
         System.out.println("<1.리스트>");
             for (PhoneBookVO node: lst) {
-                System.out.printf("%-4d %-6s %-15s %-15s%n",
+                System.out.printf("%2d. %-3s %-15s %-15s%n",
                     node.getId(), node.getName(), node.getHp(), node.getTel());
             }
             if (lst.size() == 0)

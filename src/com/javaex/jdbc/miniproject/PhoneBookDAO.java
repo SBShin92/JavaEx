@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface PhoneBookDAO {
     public boolean checkPhoneBookTable();
+
+    public boolean dropPhoneBookTable();
     
     public List<PhoneBookVO> getList();
     public boolean insert(String name, String hp, String tel);

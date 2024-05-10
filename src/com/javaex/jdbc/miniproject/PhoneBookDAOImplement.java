@@ -116,6 +116,24 @@ public class PhoneBookDAOImplement implements PhoneBookDAO {
     }
 
     @Override
+    public boolean dropPhoneBookTable() {
+        String sql = """
+                DROP TABLE PHONE_BOOK
+                    """;
+        try (
+                Connection con = getConnection();
+                PreparedStatement pstmt = con.prepareStatement(sql);) {
+            pstmt.executeUpdate();
+            checkSequence();
+        } catch (ClassNotFoundException e) {
+            System.err.println("드라이버를 찾을 수 없습니다.");
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public List<PhoneBookVO> getList() {
         List<PhoneBookVO> lst = new ArrayList<>();
         String sql = """
